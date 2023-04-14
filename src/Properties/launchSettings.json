@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "EmuBizHawk": {
+      "commandName": "Executable",
+      "executablePath": "..\\BizHawk\\EmuHawk.exe",
+      "commandLineArgs": "--open-ext-tool-dll=GeneticAlgorithmTool",
+      "workingDirectory": "..\\BizHawk",
+      "nativeDebugging": true
+    }
+  }
+}

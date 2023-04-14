@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<LangVersion>10.0</LangVersion>
+		<Nullable>enable</Nullable>
+		<TargetFramework>net48</TargetFramework>
+		<UseWindowsForms>true</UseWindowsForms>
+		<GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(BIZHAWK_DATA_HOME)' == '' ">
+		<BIZHAWK_DATA_HOME>$(ProjectDir)../BizHawk/</BIZHAWK_DATA_HOME>
+		<!-- if building EmuHawk from source, point to $(ProjectDir)../BizHawk/output/ -->
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="System.Resources.Extensions" Version="7.0.0" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+		<Reference Include="System.Windows.Forms" />
+		<Reference Include="BizHawk.BizInvoke" HintPath="$(BIZHAWK_DATA_HOME)dll/BizHawk.BizInvoke.dll" />
+		<Reference Include="BizHawk.Bizware.BizwareGL" HintPath="$(BIZHAWK_DATA_HOME)dll/BizHawk.Bizware.BizwareGL.dll" />
+		<Reference Include="BizHawk.Bizware.DirectX" HintPath="$(BIZHAWK_DATA_HOME)dll/BizHawk.Bizware.DirectX.dll" />
+		<Reference Include="BizHawk.Bizware.OpenTK3" HintPath="$(BIZHAWK_DATA_HOME)dll/BizHawk.Bizware.OpenTK3.dll" />
+		<Reference Include="BizHawk.Client.Common" HintPath="$(BIZHAWK_DATA_HOME)dll/BizHawk.Client.Common.dll" />
+		<Reference Include="BizHawk.Common" HintPath="$(BIZHAWK_DATA_HOME)dll/BizHawk.Common.dll" />
+		<Reference Include="BizHawk.Emulation.Common" HintPath="$(BIZHAWK_DATA_HOME)dll/BizHawk.Emulation.Common.dll" />
+		<Reference Include="BizHawk.Emulation.Cores" HintPath="$(BIZHAWK_DATA_HOME)dll/BizHawk.Emulation.Cores.dll" />
+		<Reference Include="BizHawk.Emulation.DiscSystem" HintPath="$(BIZHAWK_DATA_HOME)dll/BizHawk.Emulation.DiscSystem.dll" />
+		<Reference Include="BizHawk.WinForms.Controls" HintPath="$(BIZHAWK_DATA_HOME)dll/BizHawk.WinForms.Controls.dll" />
+		<Reference Include="BizHawk.Client.EmuHawk" HintPath="$(BIZHAWK_DATA_HOME)EmuHawk.exe" />
+	</ItemGroup>
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Copy SourceFiles="$(OutputPath)$(MSBuildProjectName).dll" DestinationFolder="$(BIZHAWK_DATA_HOME)ExternalTools" />
+	</Target>
+</Project>
