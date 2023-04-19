@@ -2,7 +2,6 @@
 using BizHawk.Client.EmuHawk;
 using BizHawk.Emulation.Common;
 using System;
-using System.Collections.Generic;
 
 namespace GeneticAlgorithmTool
 {
@@ -14,14 +13,12 @@ namespace GeneticAlgorithmTool
     public partial class GeneticAlgorithmToolForm : ToolFormBase, IExternalToolForm, IToolFormAutoConfig
     {
         public static Type Resources => typeof(ToolFormBase).Assembly.GetType("BizHawk.Client.EmuHawk.Properties.Resources");
-
+        private GameEnvironment? environment;
         private string windowTitle = "Genetic Algorithm Tool";
         private string prevLevel = "1-1";
         private int? prevSlot = null;
 
         #region Properties
-        [OptionalApi]
-        public IEmulationApi? EmulatorApi { get; set; } = default!;
         [RequiredService]
         public IEmulator Emulator { get; set; } = default!;
         [RequiredService]
@@ -30,9 +27,6 @@ namespace GeneticAlgorithmTool
         public IMemoryDomains? MemoryDomains { get; set; } = default!;
 
         public ApiContainer ApiContainer { get; set; } = default!;
-        public ClickyVirtualPadController Controller => InputManager.ClickyVirtualPadController;
-
-        public IList<string> ControllerButtons => Emulator.ControllerDefinition.BoolButtons;
         #endregion
 
         protected override string WindowTitle => windowTitle;
@@ -56,11 +50,17 @@ namespace GeneticAlgorithmTool
             prevLevel = "1-1"; // ReadLevel returns this when in the main menu, need to reset it
             LevelResult.Text = $"You are in World {ReadLevel()}";
             ApiContainer.EmuClient.StateLoaded += (_, _) => prevLevel = ReadLevel(); // without this, loading a state would cause UpdateAfter to save a state because the level would be different
+
+            environment = new GameEnvironment(Emulator, ApiContainer, InputManager.ClickyVirtualPadController);
+            environment.SkipStarScreen();
         }
 
         protected override void UpdateAfter()
         {
             var level = ReadLevel();
+            var firstStep = environment?.Step(JoypadSpace.Buttons.Right);
+            var secondStep = environment?.Step(JoypadSpace.Buttons.B);
+
             if (level == prevLevel) return; // no change, short-circuit
                                             // else the player has just gone to the next level
             var nextSlot = ((prevSlot ?? 0) + 1) % 10;
@@ -69,6 +69,7 @@ namespace GeneticAlgorithmTool
             if (prevSlot is not null) LevelResult.Text += $" or {prevSlot} to go back to {prevLevel}";
             prevSlot = nextSlot;
             prevLevel = level;
+
         }
 
         #region Events
