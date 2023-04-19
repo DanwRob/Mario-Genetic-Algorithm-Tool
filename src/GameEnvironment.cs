@@ -1,6 +1,7 @@
 ﻿using BizHawk.Client.Common;
 using BizHawk.Emulation.Common;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GeneticAlgorithmTool
 {
@@ -11,8 +12,9 @@ namespace GeneticAlgorithmTool
         private readonly GameMemoryHandler memoryHandler;
         private readonly ClickyVirtualPadController controller;
         private readonly IList<string> buttons;
-        private StepInformation gameInformation = new ();
+        private readonly StepInformation gameInformation = new ();
 
+        private static readonly uint[] s_busyStates = { 0, 1, 2, 3, 4, 5, 7 };
 
         public GameEnvironment(IEmulator emulator, ApiContainer apiContainer, ClickyVirtualPadController controller)
         {
@@ -24,18 +26,46 @@ namespace GeneticAlgorithmTool
             buttons = emulator.ControllerDefinition.BoolButtons;
         }
 
-        public void SkipStarScreen()
+        public void SkipStartScreen()
         {
-            controller.Toggle(buttons[(int)JoypadSpace.Buttons.Start]);
-            memoryHandler.PrelevelTimer();
-            //controller.Toggle(buttons[(int)JoypadSpace.Buttons.Start]);
+            //Press and release Start button
+            FrameAdvance(JoypadSpace.Buttons.Start);
+
+            //Press Start button until the game starts
+            while (memoryHandler.Time == 401)
+            {
+                //Press and release Start button
+                FrameAdvance(JoypadSpace.Buttons.Start);
+
+                //run-out the prelevel timer to skip the animation
+                memoryHandler.PrelevelTimer();
+            }
+        }
+
+        private void SkipDead() => memoryHandler.PlayerDies();
+
+        private void SkipTrasitionScreen()
+        {
+            while (s_busyStates.Contains(memoryHandler.State))
+            {
+                //run-out the prelevel timer to skip the animation
+                memoryHandler.PrelevelTimer();
+                FrameAdvance(JoypadSpace.Buttons.A);
+            }
         }
 
         public StepInformation Step(JoypadSpace.Buttons action)
         {
             controller.Toggle(buttons[(int)action]);
-            //controller.Toggle(buttons[(int)action]);
+            if(memoryHandler.State == 11)
+            {
+                SkipDead();
+            }
+
+            //Skip transition screen
+            SkipTrasitionScreen();
             UpdateGameInformation();
+
             return gameInformation;
         }
 
@@ -47,6 +77,12 @@ namespace GeneticAlgorithmTool
             gameInformation.Lives = memoryHandler.Lives;
             gameInformation.Score = memoryHandler.Score;
             gameInformation.Time = memoryHandler.Time;
+        }
+        private void FrameAdvance(JoypadSpace.Buttons action)
+        {
+            controller.Toggle(buttons[(int)action]);
+            emulator.FrameAdvance(controller, false, false);
+            controller.Toggle(buttons[(int)action]);
         }
     }
 

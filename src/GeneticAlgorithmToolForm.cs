@@ -52,7 +52,7 @@ namespace GeneticAlgorithmTool
             ApiContainer.EmuClient.StateLoaded += (_, _) => prevLevel = ReadLevel(); // without this, loading a state would cause UpdateAfter to save a state because the level would be different
 
             environment = new GameEnvironment(Emulator, ApiContainer, InputManager.ClickyVirtualPadController);
-            environment.SkipStarScreen();
+            environment.SkipStartScreen();
         }
 
         protected override void UpdateAfter()
