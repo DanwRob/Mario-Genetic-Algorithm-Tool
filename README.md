@@ -29,4 +29,5 @@ Make sure you unzip a copy of BizHawk(full folder) on your current root project 
 ## Usage
 1. Build solution
 2. Run EmuHawk 
+3. Load Super Mario Bros ROM game (any dump for the Nintendo NES will do) on EmuHawk
 3. Open the tool in the toolbar menu: Tools -> External Tools -> Mario Genetic Algorithm Tool
