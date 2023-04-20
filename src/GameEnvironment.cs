@@ -1,7 +1,7 @@
 ﻿using BizHawk.Client.Common;
 using BizHawk.Emulation.Common;
+using GeneticAlgorithmTool.Models;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace GeneticAlgorithmTool
 {
@@ -12,9 +12,8 @@ namespace GeneticAlgorithmTool
         private readonly GameMemoryHandler memoryHandler;
         private readonly ClickyVirtualPadController controller;
         private readonly IList<string> buttons;
-        private readonly StepInformation gameInformation = new ();
-
-        private static readonly uint[] s_busyStates = { 0, 1, 2, 3, 4, 5, 7 };
+        private uint lastTime = 0;
+        private uint lastPosition = 0;
 
         public GameEnvironment(IEmulator emulator, ApiContainer apiContainer, ClickyVirtualPadController controller)
         {
@@ -22,7 +21,6 @@ namespace GeneticAlgorithmTool
             this.apiContainer = apiContainer;
             this.controller = controller;
             memoryHandler = new GameMemoryHandler(apiContainer.Memory);
-            //memoryHandler.SetGameplayMode(GameMemoryHandler.GameplayMode.Standard);
             buttons = emulator.ControllerDefinition.BoolButtons;
         }
 
@@ -46,7 +44,7 @@ namespace GeneticAlgorithmTool
 
         private void SkipTrasitionScreen()
         {
-            while (s_busyStates.Contains(memoryHandler.State))
+            while (memoryHandler.IsInTrasition)
             {
                 //run-out the prelevel timer to skip the animation
                 memoryHandler.PrelevelTimer();
@@ -54,45 +52,79 @@ namespace GeneticAlgorithmTool
             }
         }
 
-        public StepInformation Step(JoypadSpace.Buttons action)
+        public StepResponse Step(JoypadSpace.Buttons action)
         {
             controller.Toggle(buttons[(int)action]);
-            if(memoryHandler.State == 11)
+            if(memoryHandler.IsDying)
             {
                 SkipDead();
             }
 
             //Skip transition screen
             SkipTrasitionScreen();
-            UpdateGameInformation();
 
-            return gameInformation;
+            return new StepResponse
+            {
+                Reward = GetReward(),
+                Done = IsDone(),
+                Info = GetGameInformation()
+            };
         }
 
-        private void UpdateGameInformation()
+        private StepInformation GetGameInformation()
         {
-            gameInformation.Level = memoryHandler.Level;
-            gameInformation.World = memoryHandler.World;
-            gameInformation.Coins = memoryHandler.Coins;
-            gameInformation.Lives = memoryHandler.Lives;
-            gameInformation.Score = memoryHandler.Score;
-            gameInformation.Time = memoryHandler.Time;
+            return new StepInformation
+            {
+                Level = memoryHandler.Level,
+                World = memoryHandler.World,
+                Coins = memoryHandler.Coins,
+                Lives = memoryHandler.Lives,
+                Score = memoryHandler.Score,
+                Time = memoryHandler.Time,
+                XPosition = memoryHandler.XPosition(),
+                XPositionOffset = memoryHandler.XPositionOffset,
+                XLevelPosition = memoryHandler.XLevelPosition,
+                XScreenPosition = memoryHandler.XScreenPosition,
+                PlayerPos = memoryHandler.PlayerPos
+            };
         }
+
         private void FrameAdvance(JoypadSpace.Buttons action)
         {
             controller.Toggle(buttons[(int)action]);
             emulator.FrameAdvance(controller, false, false);
             controller.Toggle(buttons[(int)action]);
         }
-    }
 
-    public class StepInformation
-    {
-        public uint Level { get; set; }
-        public uint World { get; set; }
-        public uint Coins { get; set; }
-        public uint Score { get; set; }
-        public uint Time { get; set; }
-        public uint Lives { get; set; }
+        private int GetReward() {
+            return PositionReward() + DeathPenalty() + TimePenalty();
+        }
+
+        private int DeathPenalty()
+        {
+            if(memoryHandler.IsDying || memoryHandler.IsDead)
+            {
+                return -25;
+            }
+            return 0;
+        }
+
+        private int TimePenalty()
+        {
+            int penalty = (int)(memoryHandler.Time - lastTime);
+            lastTime = memoryHandler.Time;
+            return penalty > 0 ? 0: penalty ;
+        }
+        private int PositionReward()
+        {
+            int reward = (int)(memoryHandler.XPosition() - lastPosition);
+            lastPosition = memoryHandler.XPosition();
+            return (reward < -5 || reward > 5) ? 0 : reward;
+        }
+
+        private bool IsDone()
+        {
+            return memoryHandler.IsDying || memoryHandler.IsDead || memoryHandler.IsStageEnds() || memoryHandler.IsWorldEnds();
+        }
     }
 }
