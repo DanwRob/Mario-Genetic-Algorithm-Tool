@@ -2,7 +2,6 @@
 using BizHawk.Client.EmuHawk;
 using BizHawk.Emulation.Common;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,7 +20,7 @@ namespace GeneticAlgorithmTool
         private string prevLevel = "1-1";
         private int? prevSlot = null;
         private readonly JoypadSpace joypad;
-
+        private readonly List<FramesStack> frameStack;
 
         #region Properties
         [RequiredService]
@@ -41,6 +40,7 @@ namespace GeneticAlgorithmTool
         {
             InitializeComponent();
             joypad = new JoypadSpace(GameActions.RightOnly);
+            frameStack = new List<FramesStack>();
         }
 
         private string ReadLevel()
@@ -61,12 +61,23 @@ namespace GeneticAlgorithmTool
             environment.SkipStartScreen();
         }
 
+        protected override void UpdateBefore()
+        {
+            if (frameStack.Count() == 0 || frameStack.Last().IsFinishAction())
+            {
+                var actions = joypad.GetSample();
+                var random = new Random();
+                int framesByAction = random.Next(1, 4) * 5;
+                frameStack.Add(new FramesStack(framesByAction, actions));
+            }
+        }
+
         protected override void UpdateAfter()
         {
             var level = ReadLevel();
-            var actions = joypad.GetSample();
-            var step = environment?.Step(actions);
-            
+            var lastFrameAction = frameStack.Last();
+            var step = environment?.Step(lastFrameAction.Actions);
+            lastFrameAction.AdvanceFrame();
             ConsoleLog.AppendText(step?.ToString());
 
 
@@ -86,5 +97,23 @@ namespace GeneticAlgorithmTool
             
         }
         #endregion
+    }
+
+    public class FramesStack
+    {
+        private int frameCount = 1;
+        public FramesStack(int totalFrames, IEnumerable<Buttons> actions)
+        {
+            TotalFrames = totalFrames;
+            Actions = actions;
+        }
+
+        public void AdvanceFrame() => frameCount++; 
+
+        public bool IsFinishAction() => frameCount >= TotalFrames;
+
+        public int TotalFrames { get; }
+        public IEnumerable<Buttons> Actions { get; }
+
     }
 }
