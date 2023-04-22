@@ -19,6 +19,7 @@ namespace GeneticAlgorithmTool
         private string windowTitle = "Genetic Algorithm Tool";
         private readonly JoypadSpace joypad;
         private readonly List<FramesStack> frameStack;
+        private readonly int slot = 8;
 
         #region Properties
         [RequiredService]
@@ -45,6 +46,7 @@ namespace GeneticAlgorithmTool
         {
             environment = new GameEnvironment(Emulator, ApiContainer, InputManager.ClickyVirtualPadController);
             environment.SkipStartScreen();
+            ApiContainer.SaveState.SaveSlot(slot);
         }
 
         protected override void UpdateBefore()
@@ -64,6 +66,10 @@ namespace GeneticAlgorithmTool
             lastFrameAction.AdvanceFrame();
             ConsoleLog.AppendText(step?.ToString());
             LevelResult.Text = $"You are in World {step?.Info?.World} - {step?.Info?.Level}";
+            if (step != null && step.Done)
+            {
+                ApiContainer.SaveState.LoadSlot(slot);
+            }
         }
 
         #region Events
