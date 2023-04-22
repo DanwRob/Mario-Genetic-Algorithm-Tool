@@ -66,8 +66,7 @@ namespace GeneticAlgorithmTool
             if (frameStack.Count() == 0 || frameStack.Last().IsFinishAction())
             {
                 var actions = joypad.GetSample();
-                var random = new Random();
-                int framesByAction = random.Next(1, 4) * 5;
+                int framesByAction = Utils.RandRange(1, 5, 5);
                 frameStack.Add(new FramesStack(framesByAction, actions));
             }
         }

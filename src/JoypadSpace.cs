@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace GeneticAlgorithmTool
@@ -18,8 +17,7 @@ namespace GeneticAlgorithmTool
         }
         public IEnumerable<Buttons> GetSample()
         {
-            var random = new Random();
-            int index = random.Next(0, GameActionsSelected.Count());
+            int index = Utils.RandRange(0, GameActionsSelected.Count());
             return GameActionsSelected.ElementAt(index);
         }
     }
