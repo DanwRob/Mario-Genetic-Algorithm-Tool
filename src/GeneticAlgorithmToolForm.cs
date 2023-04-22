@@ -2,7 +2,6 @@
 using BizHawk.Client.EmuHawk;
 using BizHawk.Emulation.Common;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace GeneticAlgorithmTool
@@ -15,10 +14,11 @@ namespace GeneticAlgorithmTool
     public partial class GeneticAlgorithmToolForm : ToolFormBase, IExternalToolForm, IToolFormAutoConfig
     {
         public static Type Resources => typeof(ToolFormBase).Assembly.GetType("BizHawk.Client.EmuHawk.Properties.Resources");
-        private GameEnvironment? environment;
+        private GameEnvironment environment;
         private string windowTitle = "Genetic Algorithm Tool";
         private readonly JoypadSpace joypad;
-        private readonly List<FramesStack> frameStack;
+        private readonly GeneticAlgorithm geneticAlgorithm;
+        private Species currerntSpecie;
         private readonly int slot = 8;
 
         #region Properties
@@ -39,7 +39,8 @@ namespace GeneticAlgorithmTool
         {
             InitializeComponent();
             joypad = new JoypadSpace(GameActions.RightOnly);
-            frameStack = new List<FramesStack>();
+            geneticAlgorithm = new GeneticAlgorithm(100, 6, joypad);
+            currerntSpecie = geneticAlgorithm.NextSpecie();
         }
 
         public override void Restart()
@@ -47,27 +48,36 @@ namespace GeneticAlgorithmTool
             environment = new GameEnvironment(Emulator, ApiContainer, InputManager.ClickyVirtualPadController);
             environment.SkipStartScreen();
             ApiContainer.SaveState.SaveSlot(slot);
+            GenerationResult.Text = geneticAlgorithm.Generation.ToString();
         }
 
         protected override void UpdateBefore()
         {
-            if (frameStack.Count() == 0 || frameStack.Last().IsFinishAction())
+            if (currerntSpecie.IsGenDone())
             {
-                var actions = joypad.GetSample();
-                int framesByAction = Utils.RandRange(1, 5, 5);
-                frameStack.Add(new FramesStack(framesByAction, actions));
+                var frameAction = joypad.GetFrameActionSample();
+                currerntSpecie.Genes.Add(frameAction);
             }
         }
 
         protected override void UpdateAfter()
         {
-            var lastFrameAction = frameStack.Last();
-            var step = environment?.Step(lastFrameAction.Actions);
-            lastFrameAction.AdvanceFrame();
-            ConsoleLog.AppendText(step?.ToString());
+            var currentFrameAction = currerntSpecie.GetCurrentGen();
+            var step = environment.Step(currentFrameAction.Actions);
+            currentFrameAction.AdvanceFrame();
+            geneticAlgorithm.FitnessFunction(step.Reward, currerntSpecie);
+            currerntSpecie.Done = step.Done;
+            currerntSpecie.Info = step.Info;
+
+            ConsoleLog.AppendText($"{currerntSpecie}\r\n");
+            //ConsoleLog.AppendText(step?.ToString());
             LevelResult.Text = $"You are in World {step?.Info?.World} - {step?.Info?.Level}";
+            
             if (step != null && step.Done)
             {
+                currerntSpecie.Genes.Remove(currentFrameAction);
+                currerntSpecie = geneticAlgorithm.NextSpecie();
+                GenerationResult.Text = geneticAlgorithm.Generation.ToString();
                 ApiContainer.SaveState.LoadSlot(slot);
             }
         }
@@ -78,23 +88,5 @@ namespace GeneticAlgorithmTool
             
         }
         #endregion
-    }
-
-    public class FramesStack
-    {
-        private int frameCount = 1;
-        public FramesStack(int totalFrames, IEnumerable<Buttons> actions)
-        {
-            TotalFrames = totalFrames;
-            Actions = actions;
-        }
-
-        public void AdvanceFrame() => frameCount++; 
-
-        public bool IsFinishAction() => frameCount >= TotalFrames;
-
-        public int TotalFrames { get; }
-        public IEnumerable<Buttons> Actions { get; }
-
     }
 }
