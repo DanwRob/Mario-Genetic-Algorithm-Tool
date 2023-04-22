@@ -17,8 +17,6 @@ namespace GeneticAlgorithmTool
         public static Type Resources => typeof(ToolFormBase).Assembly.GetType("BizHawk.Client.EmuHawk.Properties.Resources");
         private GameEnvironment? environment;
         private string windowTitle = "Genetic Algorithm Tool";
-        private string prevLevel = "1-1";
-        private int? prevSlot = null;
         private readonly JoypadSpace joypad;
         private readonly List<FramesStack> frameStack;
 
@@ -43,20 +41,8 @@ namespace GeneticAlgorithmTool
             frameStack = new List<FramesStack>();
         }
 
-        private string ReadLevel()
-        {
-            var bytes = ApiContainer.Memory.ReadByteRange(0x075CL, 9);
-            return bytes[8] is 0 or 0xFF
-                ? prevLevel // in the main menu
-                : $"{bytes[3] + 1}-{bytes[0] + 1}";
-        }
-
         public override void Restart()
         {
-            prevLevel = "1-1"; // ReadLevel returns this when in the main menu, need to reset it
-            LevelResult.Text = $"You are in World {ReadLevel()}";
-            ApiContainer.EmuClient.StateLoaded += (_, _) => prevLevel = ReadLevel(); // without this, loading a state would cause UpdateAfter to save a state because the level would be different
-
             environment = new GameEnvironment(Emulator, ApiContainer, InputManager.ClickyVirtualPadController);
             environment.SkipStartScreen();
         }
@@ -73,21 +59,11 @@ namespace GeneticAlgorithmTool
 
         protected override void UpdateAfter()
         {
-            var level = ReadLevel();
             var lastFrameAction = frameStack.Last();
             var step = environment?.Step(lastFrameAction.Actions);
             lastFrameAction.AdvanceFrame();
             ConsoleLog.AppendText(step?.ToString());
-
-
-            if (level == prevLevel) return; // no change, short-circuit
-                                            // else the player has just gone to the next level
-            var nextSlot = ((prevSlot ?? 0) + 1) % 10;
-            ApiContainer.SaveState.SaveSlot(nextSlot);
-            LevelResult.Text = $"You are in World {level}, load slot {nextSlot} to restart";
-            if (prevSlot is not null) LevelResult.Text += $" or {prevSlot} to go back to {prevLevel}";
-            prevSlot = nextSlot;
-            prevLevel = level;
+            LevelResult.Text = $"You are in World {step?.Info?.World} - {step?.Info?.Level}";
         }
 
         #region Events
