@@ -2,6 +2,9 @@
 using BizHawk.Client.EmuHawk;
 using BizHawk.Emulation.Common;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GeneticAlgorithmTool
 {
@@ -17,6 +20,8 @@ namespace GeneticAlgorithmTool
         private string windowTitle = "Genetic Algorithm Tool";
         private string prevLevel = "1-1";
         private int? prevSlot = null;
+        private readonly JoypadSpace joypad;
+
 
         #region Properties
         [RequiredService]
@@ -35,6 +40,7 @@ namespace GeneticAlgorithmTool
         public GeneticAlgorithmToolForm()
         {
             InitializeComponent();
+            joypad = new JoypadSpace(GameActions.RightOnly);
         }
 
         private string ReadLevel()
@@ -58,8 +64,11 @@ namespace GeneticAlgorithmTool
         protected override void UpdateAfter()
         {
             var level = ReadLevel();
-            var firstStep = environment?.Step(JoypadSpace.Buttons.Right);
-            var secondStep = environment?.Step(JoypadSpace.Buttons.B);
+            var actions = joypad.GetSample();
+            var step = environment?.Step(actions);
+            
+            ConsoleLog.AppendText(step?.ToString());
+
 
             if (level == prevLevel) return; // no change, short-circuit
                                             // else the player has just gone to the next level
@@ -69,7 +78,6 @@ namespace GeneticAlgorithmTool
             if (prevSlot is not null) LevelResult.Text += $" or {prevSlot} to go back to {prevLevel}";
             prevSlot = nextSlot;
             prevLevel = level;
-
         }
 
         #region Events

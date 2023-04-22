@@ -9,9 +9,11 @@
         public uint Time { get; set; }
         public uint Lives { get; set; }
         public uint XPosition { get; set; }
-        public uint XPositionOffset { get; set; }
-        public uint XLevelPosition { get; set; }
-        public uint XScreenPosition { get; set; }
-        public uint PlayerPos { get; set; }
+        public uint YPosition { get; set; }
+
+        public override string ToString()
+        {
+            return $"Level: {Level}, World: {World}, Coins: {Coins}, Score: {Score}, Time:{Time}, Lives:{Lives}, XPosition: {XPosition}, YPosition: {YPosition}";
+        }
     }
 }

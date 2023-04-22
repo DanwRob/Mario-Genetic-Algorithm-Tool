@@ -27,13 +27,13 @@ namespace GeneticAlgorithmTool
         public void SkipStartScreen()
         {
             //Press and release Start button
-            FrameAdvance(JoypadSpace.Buttons.Start);
+            FrameAdvance(Buttons.Start);
 
             //Press Start button until the game starts
             while (memoryHandler.Time == 401)
             {
                 //Press and release Start button
-                FrameAdvance(JoypadSpace.Buttons.Start);
+                FrameAdvance(Buttons.Start);
 
                 //run-out the prelevel timer to skip the animation
                 memoryHandler.PrelevelTimer();
@@ -48,14 +48,16 @@ namespace GeneticAlgorithmTool
             {
                 //run-out the prelevel timer to skip the animation
                 memoryHandler.PrelevelTimer();
-                FrameAdvance(JoypadSpace.Buttons.A);
+                FrameAdvance(Buttons.A);
             }
         }
 
-        public StepResponse Step(JoypadSpace.Buttons action)
+        public StepResponse Step(IEnumerable<Buttons> action)
         {
-            controller.Toggle(buttons[(int)action]);
-            if(memoryHandler.IsDying)
+
+            PressButton(action);
+
+            if (memoryHandler.IsDying)
             {
                 SkipDead();
             }
@@ -71,6 +73,17 @@ namespace GeneticAlgorithmTool
             };
         }
 
+        private void PressButton(IEnumerable<Buttons> actions)
+        {
+            foreach (Buttons btn in actions)
+            {
+                if (btn != Buttons.None)
+                {
+                    controller.Click(buttons[(int)btn]);
+                }
+            }
+        }
+
         private StepInformation GetGameInformation()
         {
             return new StepInformation
@@ -81,16 +94,17 @@ namespace GeneticAlgorithmTool
                 Lives = memoryHandler.Lives,
                 Score = memoryHandler.Score,
                 Time = memoryHandler.Time,
-                XPosition = memoryHandler.XPosition(),
-                XPositionOffset = memoryHandler.XPositionOffset,
-                XLevelPosition = memoryHandler.XLevelPosition,
-                XScreenPosition = memoryHandler.XScreenPosition,
-                PlayerPos = memoryHandler.PlayerPos
+                XPosition = memoryHandler.XPosition,
+                YPosition = memoryHandler.YPosition
             };
         }
 
-        private void FrameAdvance(JoypadSpace.Buttons action)
+        private void FrameAdvance(Buttons action)
         {
+            if (action == Buttons.None) {
+                emulator.FrameAdvance(controller, false, false);
+                return;
+            }
             controller.Toggle(buttons[(int)action]);
             emulator.FrameAdvance(controller, false, false);
             controller.Toggle(buttons[(int)action]);
@@ -113,12 +127,12 @@ namespace GeneticAlgorithmTool
         {
             int penalty = (int)(memoryHandler.Time - lastTime);
             lastTime = memoryHandler.Time;
-            return penalty > 0 ? 0: penalty ;
+            return penalty > 0 ? 0: penalty;
         }
         private int PositionReward()
         {
-            int reward = (int)(memoryHandler.XPosition() - lastPosition);
-            lastPosition = memoryHandler.XPosition();
+            int reward = (int)(memoryHandler.XPosition - lastPosition);
+            lastPosition = memoryHandler.XPosition;
             return (reward < -5 || reward > 5) ? 0 : reward;
         }
 

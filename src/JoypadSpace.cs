@@ -1,19 +1,26 @@
-﻿namespace GeneticAlgorithmTool
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace GeneticAlgorithmTool
 {
-    public static class JoypadSpace
+    public class JoypadSpace
     {
-        public enum Buttons
+        IEnumerable<IEnumerable<Buttons>> GameActionsSelected { get; set; }
+        public JoypadSpace()
         {
-            Up = 0,
-            Down = 1,
-            Left = 2,
-            Right = 3,
-            Start = 4,
-            Select = 5,
-            B = 6,
-            A = 7,
-            Reset = 8,
-            Power = 9
+            GameActionsSelected = GameActions.RightOnly;
+        }
+
+        public JoypadSpace(IEnumerable<IEnumerable<Buttons>> actionsSelected)
+        {
+            GameActionsSelected = actionsSelected;
+        }
+        public IEnumerable<Buttons> GetSample()
+        {
+            var random = new Random();
+            int index = random.Next(0, GameActionsSelected.Count());
+            return GameActionsSelected.ElementAt(index);
         }
     }
 }

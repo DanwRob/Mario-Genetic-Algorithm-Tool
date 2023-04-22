@@ -33,7 +33,7 @@ namespace GeneticAlgorithmTool
 
         public uint Time => ReadMemRange(0x07f8, 3);
         public bool IsInTrasition => s_TransitionStates.Contains(State);
-        public bool IsDying => State == 0x0B;
+        public bool IsDying => State == 0x0B || YViewPort > 1;
         public bool IsDead => State == 0x06;
         public uint State
         {
@@ -65,16 +65,9 @@ namespace GeneticAlgorithmTool
             return UInt32.Parse(strValue);
         }
 
-        public void SetGameplayMode(GameplayMode mode)
-        {
-            memory.WriteU8(0x0770, (uint)mode);
-        }
+        public void SetGameplayMode(GameplayMode mode) => memory.WriteU8(0x0770, (uint)mode);
 
-        public void PlayerDies()
-        {
-            memory.WriteByte(0x000E, 0x06);
-        }
-
+        public void PlayerDies()=> memory.WriteByte(0x000E, 0x06);
         public void PrelevelTimer() => memory.WriteByte(0x07A0, 0x00);
         public bool IsWorldEnds() => memory.ReadByte(0x0770) == (uint)GameplayMode.EndOfWorld;
         public bool IsStageEnds()
@@ -94,12 +87,8 @@ namespace GeneticAlgorithmTool
         public uint XLevelPosition => memory.ReadByte(0x006D);
         public uint XScreenPosition => memory.ReadByte(0x0086);
         public uint YViewPort => memory.ReadByte(0x00B5);
-
-        public uint XPositionOffset => memory.ReadByte(0x03AD);
-        public uint PlayerPos => memory.ReadByte(0x071D);
-        public uint XPosition()
-        {
-            return XLevelPosition + XScreenPosition;
-        }
+        public uint PlayerYScreenPosition => memory.ReadByte(0x03b8);
+        public uint XPosition => XLevelPosition + XScreenPosition;
+        public uint YPosition => (YViewPort < 1) ? PlayerYScreenPosition : 255 - PlayerYScreenPosition;
     }
 }

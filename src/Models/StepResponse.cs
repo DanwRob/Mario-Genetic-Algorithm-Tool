@@ -5,5 +5,10 @@
         public int Reward { get; set; }
         public bool Done { get; set; }
         public StepInformation? Info { get; set; }
+
+        public override string ToString()
+        {
+            return $"Reward: {Reward}, Done: {Done} \r\n";
+        }
     }
 }
