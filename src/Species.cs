@@ -8,21 +8,30 @@ namespace GeneticAlgorithmTool
     {
         public int Id { get; set; }
         public List<FrameAction> Genes { get; set; }
-        public bool State { get; set; }
-        public int Score { get; set; }
+        public int Reward { get; set; }
         public bool Done { get; set; }
-        public StepInformation Info { get; set; } = new();
         private int currentGen;
         public Species(int id)
         {
-            Id = id;
+            Id = ++id;
             Genes = new List<FrameAction>();
             ResetSpecies();
         }
 
         public override string ToString()
         {
-            return $"Species: {Id}, Score: {Score}, Done: {Done}";
+            return $"Specie: {Id}, Score: {Reward}";
+        }
+
+        public void UpdateInformation(StepResponse stepResponse)
+        {
+            Done = stepResponse.Done;
+            var currentFrame = GetCurrentGen();
+            currentFrame.Coins = (int)stepResponse.Info.Coins;
+            currentFrame.Time = (int)stepResponse.Info.Time;
+            currentFrame.Score = (int)stepResponse.Info.Score;
+            currentFrame.XPosition = (int)stepResponse.Info.XPosition;
+            currentFrame.YPosition = (int)stepResponse.Info.YPosition;
         }
 
         public FrameAction GetCurrentGen()
@@ -45,11 +54,33 @@ namespace GeneticAlgorithmTool
             return false;
         }
 
+        public void RemoveLastCorruptGenes()
+        {
+            Genes = Genes.Where(gen => gen.YPosition > 0).ToList();
+            int lastIndex = Genes.Count() - 1;
+            if (Genes[lastIndex].YPosition == 0 || Genes[lastIndex].YPosition >= 250) // death by fall, corrupt genes while Mario is fallind will be removed 
+            {
+                while (true)
+                {
+                    var gen = Genes[lastIndex];
+                    var prevGen = Genes[lastIndex - 1];
+                    if (gen.YPosition == prevGen.YPosition)
+                    {
+                        break;
+                    }
+                    Genes.Remove(gen);
+                    lastIndex--;
+                }
+                return;
+            }
+
+            Genes.RemoveAt(lastIndex);
+        }
+
         public void ResetSpecies()
         {
             currentGen = 0;
-            Score = 0;
-            State = false;
+            Reward = 0;
             Done = false;
         }
     }

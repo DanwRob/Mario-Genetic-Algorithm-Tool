@@ -2,7 +2,6 @@
 using BizHawk.Client.EmuHawk;
 using BizHawk.Emulation.Common;
 using System;
-using System.Linq;
 
 namespace GeneticAlgorithmTool
 {
@@ -63,19 +62,18 @@ namespace GeneticAlgorithmTool
         protected override void UpdateAfter()
         {
             var currentFrameAction = currerntSpecie.GetCurrentGen();
-            var step = environment.Step(currentFrameAction.Actions);
-            currentFrameAction.AdvanceFrame();
-            geneticAlgorithm.FitnessFunction(step.Reward, currerntSpecie);
-            currerntSpecie.Done = step.Done;
-            currerntSpecie.Info = step.Info;
 
-            ConsoleLog.AppendText($"{currerntSpecie}\r\n");
-            //ConsoleLog.AppendText(step?.ToString());
+            var step = environment.Step(currentFrameAction.Actions);
+            //currerntSpecie.UpdateInformation(step);
+            geneticAlgorithm.FitnessFunction(currerntSpecie, step);
+
+            currentFrameAction.AdvanceFrame();
+            ConsoleLog.AppendText($"{currerntSpecie} Action:{string.Join("-", currentFrameAction.Actions)} PosY: {currentFrameAction.YPosition} RealPosY: {step.Info.YPosition}\r\n");
             LevelResult.Text = $"You are in World {step?.Info?.World} - {step?.Info?.Level}";
             
             if (step != null && step.Done)
             {
-                currerntSpecie.Genes.Remove(currentFrameAction);
+                currerntSpecie.RemoveLastCorruptGenes();
                 currerntSpecie = geneticAlgorithm.NextSpecie();
                 GenerationResult.Text = geneticAlgorithm.Generation.ToString();
                 ApiContainer.SaveState.LoadSlot(slot);
