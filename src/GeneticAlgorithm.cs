@@ -26,28 +26,6 @@ namespace GeneticAlgorithmTool
             }
         }
 
-        //public void FitnessFunction(Species species)
-        //{
-        //    //int diffScore = (int)((stepInfo.Info.Score - species.Info.Score) / 10);
-        //    //species.Score += stepInfo.Reward + diffScore;
-        //    //if (currentFrame.IsFinishAction())
-        //    //{
-        //    //    int diffScore = (int) ((stepInfo.Info.Score - species.Info.Score ) / 10);
-        //    //    //int diffTime = (int)(stepInfo.Info.Time - species.Info.Time);
-        //    //    int diffTime = 0;
-        //    //    species.Score += diffScore + diffTime;
-        //    //}
-        //    //species.UpdateInformation(stepInfo);
-        //    int diffScore = 0;
-        //    int prevScore = 0;
-        //    foreach (var gen in species.Genes)
-        //    {
-        //        prevScore = (gen.Score - prevScore)/10;
-        //        diffScore += prevScore;
-        //    }
-        //    species.Reward += diffScore;
-        //}
-
         public void FitnessFunction(Species species, StepResponse step)
         {
             int diffScore = ((int)step.Info.Score - prevScore) / 10;

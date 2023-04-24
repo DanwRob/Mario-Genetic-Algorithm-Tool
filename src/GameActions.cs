@@ -33,6 +33,17 @@ namespace GeneticAlgorithmTool
             new []{Buttons.Up},
             new []{Buttons.Down},
         };
+
+        public static IEnumerable<IEnumerable<Buttons>> SelectActions(int action)
+        {
+            return action switch
+            {
+                0 => RightOnly,
+                1 => SimpleMovement,
+                2 => ComplexMovement,
+                _ => RightOnly,
+            };
+        }
     }
     public enum Buttons
     {

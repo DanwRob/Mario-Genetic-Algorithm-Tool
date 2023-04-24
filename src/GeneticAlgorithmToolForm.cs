@@ -1,6 +1,7 @@
 ﻿using BizHawk.Client.Common;
 using BizHawk.Client.EmuHawk;
 using BizHawk.Emulation.Common;
+using GeneticAlgorithmTool.Models;
 using System;
 
 namespace GeneticAlgorithmTool
@@ -15,11 +16,11 @@ namespace GeneticAlgorithmTool
         public static Type Resources => typeof(ToolFormBase).Assembly.GetType("BizHawk.Client.EmuHawk.Properties.Resources");
         private GameEnvironment environment;
         private string windowTitle = "Genetic Algorithm Tool";
-        private readonly JoypadSpace joypad;
-        private readonly GeneticAlgorithm geneticAlgorithm;
+        private JoypadSpace joypad;
+        private GeneticAlgorithm geneticAlgorithm;
         private Species currerntSpecie;
         private readonly int slot = 8;
-
+        private bool running = false;
         #region Properties
         [RequiredService]
         public IEmulator Emulator { get; set; } = default!;
@@ -37,6 +38,7 @@ namespace GeneticAlgorithmTool
         public GeneticAlgorithmToolForm()
         {
             InitializeComponent();
+            GameActionInput.SelectedIndex = 0;
             joypad = new JoypadSpace(GameActions.RightOnly);
             geneticAlgorithm = new GeneticAlgorithm(100, 6, joypad);
             currerntSpecie = geneticAlgorithm.NextSpecie();
@@ -44,6 +46,10 @@ namespace GeneticAlgorithmTool
 
         public override void Restart()
         {
+            if (!running)
+            {
+                return;
+            }
             environment = new GameEnvironment(Emulator, ApiContainer, InputManager.ClickyVirtualPadController);
             environment.SkipStartScreen();
             ApiContainer.SaveState.SaveSlot(slot);
@@ -52,6 +58,16 @@ namespace GeneticAlgorithmTool
 
         protected override void UpdateBefore()
         {
+            if (!running)
+            {
+                return;
+            }
+
+            if (geneticAlgorithm.TotalGenerations < geneticAlgorithm.Generation)
+            {
+                StopBtn.PerformClick();
+            }
+
             if (currerntSpecie.IsGenDone())
             {
                 var frameAction = joypad.GetFrameActionSample();
@@ -61,16 +77,19 @@ namespace GeneticAlgorithmTool
 
         protected override void UpdateAfter()
         {
+            if (!running)
+            {
+                return;
+            }
+
             var currentFrameAction = currerntSpecie.GetCurrentGen();
 
             var step = environment.Step(currentFrameAction.Actions);
-            //currerntSpecie.UpdateInformation(step);
             geneticAlgorithm.FitnessFunction(currerntSpecie, step);
 
             currentFrameAction.AdvanceFrame();
-            ConsoleLog.AppendText($"{currerntSpecie} Action:{string.Join("-", currentFrameAction.Actions)} PosY: {currentFrameAction.YPosition} RealPosY: {step.Info.YPosition}\r\n");
-            LevelResult.Text = $"You are in World {step?.Info?.World} - {step?.Info?.Level}";
-            
+            UpdateUI(step,currentFrameAction);
+
             if (step != null && step.Done)
             {
                 currerntSpecie.RemoveLastCorruptGenes();
@@ -80,11 +99,53 @@ namespace GeneticAlgorithmTool
             }
         }
 
+        private void UpdateUI(StepResponse step, FrameAction action)
+        {
+            LevelResult.Text = $"{step.Info.Level}";
+            WorldResult.Text = $"{step.Info.World}";
+            PositionXResult.Text = $"{step.Info.XPosition}";
+            PositionYResult.Text = $"{step.Info.YPosition}";
+
+            ConsoleLog.AppendText($"{currerntSpecie} Action:{string.Join("", action.Actions)}\r\n");
+        }
+
         #region Events
         public void OnBotLoad(object sender, EventArgs eventArgs)
         {
             
         }
+        private void StartBtn_Click(object sender, EventArgs e)
+        {
+            int population = (int)PopulationInput.Value;
+            int generations = (int)GenerationInput.Value;
+            int gameActions = GameActionInput.SelectedIndex;
+            EnableConfigurationControls(false);
+            joypad = new JoypadSpace(GameActions.SelectActions(gameActions));
+            geneticAlgorithm = new GeneticAlgorithm(generations, population, joypad);
+            currerntSpecie = geneticAlgorithm.NextSpecie();
+            StartBtn.Enabled = false;
+            StopBtn.Enabled = true;
+            ConsoleLog.Text = "";
+            running = true;
+            MainForm.UnpauseEmulator();
+            Restart();
+        }
+        private void StopBtn_Click(object sender, EventArgs e)
+        {
+            EnableConfigurationControls(true);
+            StartBtn.Enabled = true;
+            StopBtn.Enabled = false;
+            running = false;
+            ApiContainer.SaveState.LoadSlot(slot);
+            MainForm.PauseEmulator();
+        }
         #endregion
+
+        private void EnableConfigurationControls(bool enable)
+        {
+            PopulationInput.Enabled = enable;
+            GenerationInput.Enabled = enable;
+            GameActionInput.Enabled = enable;
+        }
     }
 }

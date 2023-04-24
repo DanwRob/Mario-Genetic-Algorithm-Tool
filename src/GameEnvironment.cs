@@ -24,6 +24,11 @@ namespace GeneticAlgorithmTool
             buttons = emulator.ControllerDefinition.BoolButtons;
         }
 
+        public void StartScreen()
+        {
+            memoryHandler.SetGameplayMode(GameMemoryHandler.GameplayMode.Demo);
+        }
+
         public void SkipStartScreen()
         {
             //Press and release Start button
