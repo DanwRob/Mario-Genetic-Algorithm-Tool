@@ -48,6 +48,7 @@ namespace GeneticAlgorithmTool
         {
             if (!running)
             {
+                MainForm.PauseEmulator();
                 return;
             }
             environment = new GameEnvironment(Emulator, ApiContainer, InputManager.ClickyVirtualPadController);

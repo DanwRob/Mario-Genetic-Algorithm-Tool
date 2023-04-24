@@ -55,7 +55,11 @@ namespace GeneticAlgorithmTool
             foreach(var species in Population)
             {
                 int randomIndex = Utils.RandRange(0, species.Genes.Count);
-                species.Genes[randomIndex] = Joypad.GetFrameActionSample();
+                float probablity = Utils.RandRange(1, 100) / 100;
+                if (probablity >= 0.7)
+                {
+                    species.Genes[randomIndex] = Joypad.GetFrameActionSample();
+                }
                 //Modify the last 5 frames to prevent local optimum
                 for (int i = 1; i < 5; i++)
                 {
