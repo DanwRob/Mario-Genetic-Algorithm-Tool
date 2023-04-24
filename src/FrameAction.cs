@@ -17,7 +17,7 @@ namespace GeneticAlgorithmTool
             var newActions = new List<Buttons>();
             foreach (Buttons b in Actions)
             {
-                newActions.Add(b);
+                newActions.Add((Buttons)(int)b);
             }
             return new FrameAction(TotalFrames, newActions);
         }

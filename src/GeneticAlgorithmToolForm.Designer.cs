@@ -73,6 +73,7 @@
             this.WorldResult = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.PauseBtn = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GenerationInput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PopulationInput)).BeginInit();
@@ -188,6 +189,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.PauseBtn);
             this.groupBox2.Controls.Add(this.StopBtn);
             this.groupBox2.Controls.Add(this.StartBtn);
             this.groupBox2.Controls.Add(this.BestRewardResult);
@@ -205,7 +207,7 @@
             // StopBtn
             // 
             this.StopBtn.Enabled = false;
-            this.StopBtn.Location = new System.Drawing.Point(285, 19);
+            this.StopBtn.Location = new System.Drawing.Point(220, 19);
             this.StopBtn.Name = "StopBtn";
             this.StopBtn.Size = new System.Drawing.Size(75, 23);
             this.StopBtn.TabIndex = 8;
@@ -215,7 +217,7 @@
             // 
             // StartBtn
             // 
-            this.StartBtn.Location = new System.Drawing.Point(374, 19);
+            this.StartBtn.Location = new System.Drawing.Point(382, 19);
             this.StartBtn.Name = "StartBtn";
             this.StartBtn.Size = new System.Drawing.Size(75, 23);
             this.StartBtn.TabIndex = 7;
@@ -465,6 +467,17 @@
             this.label3.TabIndex = 5;
             this.label3.Text = "World:";
             // 
+            // PauseBtn
+            // 
+            this.PauseBtn.Enabled = false;
+            this.PauseBtn.Location = new System.Drawing.Point(301, 19);
+            this.PauseBtn.Name = "PauseBtn";
+            this.PauseBtn.Size = new System.Drawing.Size(75, 23);
+            this.PauseBtn.TabIndex = 9;
+            this.PauseBtn.Text = "Pause";
+            this.PauseBtn.UseVisualStyleBackColor = true;
+            this.PauseBtn.Click += new System.EventHandler(this.PauseBtn_Click);
+            // 
             // GeneticAlgorithmToolForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -540,5 +553,6 @@
         private System.Windows.Forms.ComboBox GameActionInput;
         private System.Windows.Forms.Button StopBtn;
         private System.Windows.Forms.Button StartBtn;
+        private System.Windows.Forms.Button PauseBtn;
     }
 }

@@ -124,8 +124,7 @@ namespace GeneticAlgorithmTool
             joypad = new JoypadSpace(GameActions.SelectActions(gameActions));
             geneticAlgorithm = new GeneticAlgorithm(generations, population, joypad);
             currerntSpecie = geneticAlgorithm.NextSpecie();
-            StartBtn.Enabled = false;
-            StopBtn.Enabled = true;
+            ToggleInitButton(true);
             ConsoleLog.Text = "";
             running = true;
             MainForm.UnpauseEmulator();
@@ -134,11 +133,24 @@ namespace GeneticAlgorithmTool
         private void StopBtn_Click(object sender, EventArgs e)
         {
             EnableConfigurationControls(true);
-            StartBtn.Enabled = true;
-            StopBtn.Enabled = false;
+            ToggleInitButton(false);
             running = false;
             ApiContainer.SaveState.LoadSlot(slot);
             MainForm.PauseEmulator();
+        }
+
+        private void PauseBtn_Click(object sender, EventArgs e)
+        {
+            if (running)
+            {
+                MainForm.PauseEmulator();
+            }
+            else
+            {
+                MainForm.UnpauseEmulator();
+            }
+            running = !running;
+            PauseBtn.Text = running ? "Pause" : "Continue";
         }
         #endregion
 
@@ -147,6 +159,13 @@ namespace GeneticAlgorithmTool
             PopulationInput.Enabled = enable;
             GenerationInput.Enabled = enable;
             GameActionInput.Enabled = enable;
+        }
+
+        private void ToggleInitButton(bool click)
+        {
+            StartBtn.Enabled = !click;
+            StopBtn.Enabled = click;
+            PauseBtn.Enabled = click;
         }
     }
 }

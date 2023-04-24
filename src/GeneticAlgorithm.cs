@@ -56,7 +56,7 @@ namespace GeneticAlgorithmTool
             {
                 int randomIndex = Utils.RandRange(0, species.Genes.Count);
                 float probablity = Utils.RandRange(1, 100) / 100;
-                if (probablity >= 0.7)
+                if (probablity <= 0.3)
                 {
                     species.Genes[randomIndex] = Joypad.GetFrameActionSample();
                 }
@@ -75,10 +75,10 @@ namespace GeneticAlgorithmTool
             
             if (currentSpecies == PopulationSize)
             {
-                NextGeneration();;
+                NextGeneration();
                 currentSpecies = 0;
-                prevScore = 0;
             }
+            prevScore = 0;
             var specie = Population[currentSpecies];
             currentSpecies++;
             return specie;
