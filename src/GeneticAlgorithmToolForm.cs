@@ -11,9 +11,9 @@ namespace GeneticAlgorithmTool
         VSystemID.Raw.NES,
         "EA343F4E445A9050D4B4FBAC2C77D0693B1D0922", // U
         "AB30029EFEC6CCFC5D65DFDA7FBC6E6489A80805")] // E
-    public partial class GeneticAlgorithmToolForm : ToolFormBase, IExternalToolForm, IToolFormAutoConfig
+    public partial class GeneticAlgorithmToolForm : ToolFormBase, IExternalToolForm
     {
-        public static Type Resources => typeof(ToolFormBase).Assembly.GetType("BizHawk.Client.EmuHawk.Properties.Resources");
+        //public static Type Resources => typeof(ToolFormBase).Assembly.GetType("BizHawk.Client.EmuHawk.Properties.Resources");
         private GameEnvironment environment;
         private string windowTitle = "Genetic Algorithm Tool";
         private JoypadSpace joypad;
@@ -40,17 +40,12 @@ namespace GeneticAlgorithmTool
             InitializeComponent();
             GameActionInput.SelectedIndex = 0;
             joypad = new JoypadSpace(GameActions.RightOnly);
-            geneticAlgorithm = new GeneticAlgorithm(100, 6, joypad);
+            geneticAlgorithm = new GeneticAlgorithm(100, 6, 0.3,joypad);
             currerntSpecie = geneticAlgorithm.NextSpecie();
         }
 
         public override void Restart()
         {
-            //if (!running)
-            //{
-            //    MainForm.PauseEmulator();
-            //    return;
-            //}
             environment = new GameEnvironment(Emulator, ApiContainer, InputManager.ClickyVirtualPadController);
             environment.SkipStartScreen();
             ApiContainer.SaveState.SaveSlot(slot);
@@ -121,9 +116,10 @@ namespace GeneticAlgorithmTool
             int population = (int)PopulationInput.Value;
             int generations = (int)GenerationInput.Value;
             int gameActions = GameActionInput.SelectedIndex;
+            double mutationRate = (double)MutationRateInput.Value;
             EnableConfigurationControls(false);
             joypad = new JoypadSpace(GameActions.SelectActions(gameActions));
-            geneticAlgorithm = new GeneticAlgorithm(generations, population, joypad);
+            geneticAlgorithm = new GeneticAlgorithm(generations, population, mutationRate, joypad);
             currerntSpecie = geneticAlgorithm.NextSpecie();
             ToggleInitButton(true);
             ConsoleLog.Text = "";
@@ -159,6 +155,7 @@ namespace GeneticAlgorithmTool
             PopulationInput.Enabled = enable;
             GenerationInput.Enabled = enable;
             GameActionInput.Enabled = enable;
+            MutationRateInput.Enabled = enable;
         }
 
         private void ToggleInitButton(bool click)

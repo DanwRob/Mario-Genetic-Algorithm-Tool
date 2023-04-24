@@ -46,26 +46,6 @@
             this.ConsoleLog = new System.Windows.Forms.TextBox();
             this.LevelResult = new System.Windows.Forms.Label();
             this.LevelLabel = new System.Windows.Forms.Label();
-            this.BotMenu = new BizHawk.WinForms.Controls.MenuStripEx();
-            this.FileSubMenu = new BizHawk.WinForms.Controls.ToolStripMenuItemEx();
-            this.NewMenuItem = new BizHawk.WinForms.Controls.ToolStripMenuItemEx();
-            this.OpenMenuItem = new BizHawk.WinForms.Controls.ToolStripMenuItemEx();
-            this.SaveMenuItem = new BizHawk.WinForms.Controls.ToolStripMenuItemEx();
-            this.SaveAsMenuItem = new BizHawk.WinForms.Controls.ToolStripMenuItemEx();
-            this.RecentSubMenu = new BizHawk.WinForms.Controls.ToolStripMenuItemEx();
-            this.toolStripSeparator2 = new BizHawk.WinForms.Controls.ToolStripSeparatorEx();
-            this.OptionsSubMenu = new BizHawk.WinForms.Controls.ToolStripMenuItemEx();
-            this.MemoryDomainsMenuItem = new BizHawk.WinForms.Controls.ToolStripMenuItemEx();
-            this.toolStripSeparator3 = new BizHawk.WinForms.Controls.ToolStripSeparatorEx();
-            this.DataSizeMenuItem = new BizHawk.WinForms.Controls.ToolStripMenuItemEx();
-            this._1ByteMenuItem = new BizHawk.WinForms.Controls.ToolStripMenuItemEx();
-            this._2ByteMenuItem = new BizHawk.WinForms.Controls.ToolStripMenuItemEx();
-            this._4ByteMenuItem = new BizHawk.WinForms.Controls.ToolStripMenuItemEx();
-            this.BigEndianMenuItem = new BizHawk.WinForms.Controls.ToolStripMenuItemEx();
-            this.toolStripSeparator4 = new BizHawk.WinForms.Controls.ToolStripSeparatorEx();
-            this.TurboWhileBottingMenuItem = new BizHawk.WinForms.Controls.ToolStripMenuItemEx();
-            this.SettingsSubMenu = new BizHawk.WinForms.Controls.ToolStripMenuItemEx();
-            this.HelpSubMenu = new BizHawk.WinForms.Controls.ToolStripMenuItemEx();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.PositionYResult = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -74,26 +54,30 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.PauseBtn = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
+            this.MutationRateInput = new System.Windows.Forms.NumericUpDown();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GenerationInput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PopulationInput)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.BotMenu.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MutationRateInput)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.MutationRateInput);
+            this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.GameActionInput);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.GenerationInput);
             this.groupBox1.Controls.Add(this.GenerationsInputLabel);
             this.groupBox1.Controls.Add(this.PopulationInput);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Location = new System.Drawing.Point(13, 35);
+            this.groupBox1.Location = new System.Drawing.Point(13, 7);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(463, 64);
+            this.groupBox1.Size = new System.Drawing.Size(463, 111);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Configuration";
@@ -103,18 +87,18 @@
             this.GameActionInput.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.GameActionInput.FormattingEnabled = true;
             this.GameActionInput.Items.AddRange(new object[] {
-            "Right",
-            "Simple",
-            "Complex"});
-            this.GameActionInput.Location = new System.Drawing.Point(370, 24);
+            "Right Only",
+            "Simple Movement",
+            "Complex Movement"});
+            this.GameActionInput.Location = new System.Drawing.Point(74, 70);
             this.GameActionInput.Name = "GameActionInput";
-            this.GameActionInput.Size = new System.Drawing.Size(84, 21);
+            this.GameActionInput.Size = new System.Drawing.Size(124, 21);
             this.GameActionInput.TabIndex = 5;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(300, 28);
+            this.label5.Location = new System.Drawing.Point(4, 74);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(71, 13);
             this.label5.TabIndex = 4;
@@ -158,7 +142,7 @@
             // 
             // PopulationInput
             // 
-            this.PopulationInput.Location = new System.Drawing.Point(217, 26);
+            this.PopulationInput.Location = new System.Drawing.Point(223, 26);
             this.PopulationInput.Maximum = new decimal(new int[] {
             15,
             0,
@@ -181,7 +165,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(154, 29);
+            this.label1.Location = new System.Drawing.Point(160, 29);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(60, 13);
             this.label1.TabIndex = 0;
@@ -197,7 +181,7 @@
             this.groupBox2.Controls.Add(this.GenerationResult);
             this.groupBox2.Controls.Add(this.GenerationResultLabel);
             this.groupBox2.Controls.Add(this.panel1);
-            this.groupBox2.Location = new System.Drawing.Point(13, 202);
+            this.groupBox2.Location = new System.Drawing.Point(14, 190);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(463, 282);
             this.groupBox2.TabIndex = 1;
@@ -228,7 +212,7 @@
             // BestRewardResult
             // 
             this.BestRewardResult.AutoSize = true;
-            this.BestRewardResult.Location = new System.Drawing.Point(184, 29);
+            this.BestRewardResult.Location = new System.Drawing.Point(184, 23);
             this.BestRewardResult.Name = "BestRewardResult";
             this.BestRewardResult.Size = new System.Drawing.Size(13, 13);
             this.BestRewardResult.TabIndex = 6;
@@ -237,7 +221,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(106, 29);
+            this.label2.Location = new System.Drawing.Point(106, 23);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(71, 13);
             this.label2.TabIndex = 5;
@@ -246,7 +230,7 @@
             // GenerationResult
             // 
             this.GenerationResult.AutoSize = true;
-            this.GenerationResult.Location = new System.Drawing.Point(75, 29);
+            this.GenerationResult.Location = new System.Drawing.Point(75, 23);
             this.GenerationResult.Name = "GenerationResult";
             this.GenerationResult.Size = new System.Drawing.Size(13, 13);
             this.GenerationResult.TabIndex = 2;
@@ -255,7 +239,7 @@
             // GenerationResultLabel
             // 
             this.GenerationResultLabel.AutoSize = true;
-            this.GenerationResultLabel.Location = new System.Drawing.Point(4, 29);
+            this.GenerationResultLabel.Location = new System.Drawing.Point(4, 23);
             this.GenerationResultLabel.Name = "GenerationResultLabel";
             this.GenerationResultLabel.Size = new System.Drawing.Size(67, 13);
             this.GenerationResultLabel.TabIndex = 1;
@@ -297,104 +281,6 @@
             this.LevelLabel.Size = new System.Drawing.Size(36, 13);
             this.LevelLabel.TabIndex = 3;
             this.LevelLabel.Text = "Level:";
-            // 
-            // BotMenu
-            // 
-            this.BotMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.FileSubMenu,
-            this.OptionsSubMenu,
-            this.SettingsSubMenu,
-            this.HelpSubMenu});
-            this.BotMenu.TabIndex = 2;
-            // 
-            // FileSubMenu
-            // 
-            this.FileSubMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.NewMenuItem,
-            this.OpenMenuItem,
-            this.SaveMenuItem,
-            this.SaveAsMenuItem,
-            this.RecentSubMenu});
-            this.FileSubMenu.Text = "&File";
-            // 
-            // NewMenuItem
-            // 
-            this.NewMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.NewMenuItem.Text = "&New";
-            // 
-            // OpenMenuItem
-            // 
-            this.OpenMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.OpenMenuItem.Text = "&Open...";
-            // 
-            // SaveMenuItem
-            // 
-            this.SaveMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.SaveMenuItem.Text = "&Save";
-            // 
-            // SaveAsMenuItem
-            // 
-            this.SaveAsMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.S)));
-            this.SaveAsMenuItem.Text = "Save &As...";
-            // 
-            // RecentSubMenu
-            // 
-            this.RecentSubMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripSeparator2});
-            this.RecentSubMenu.Text = "Recent";
-            // 
-            // OptionsSubMenu
-            // 
-            this.OptionsSubMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.MemoryDomainsMenuItem,
-            this.DataSizeMenuItem,
-            this.BigEndianMenuItem,
-            this.toolStripSeparator4,
-            this.TurboWhileBottingMenuItem});
-            this.OptionsSubMenu.Text = "&Options";
-            // 
-            // MemoryDomainsMenuItem
-            // 
-            this.MemoryDomainsMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripSeparator3});
-            this.MemoryDomainsMenuItem.Text = "Memory Domains";
-            // 
-            // DataSizeMenuItem
-            // 
-            this.DataSizeMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this._1ByteMenuItem,
-            this._2ByteMenuItem,
-            this._4ByteMenuItem});
-            this.DataSizeMenuItem.Text = "Data Size";
-            // 
-            // _1ByteMenuItem
-            // 
-            this._1ByteMenuItem.Text = "1 Byte";
-            // 
-            // _2ByteMenuItem
-            // 
-            this._2ByteMenuItem.Text = "2 Bytes";
-            // 
-            // _4ByteMenuItem
-            // 
-            this._4ByteMenuItem.Text = "4 Bytes";
-            // 
-            // BigEndianMenuItem
-            // 
-            this.BigEndianMenuItem.Text = "Big Endian";
-            // 
-            // TurboWhileBottingMenuItem
-            // 
-            this.TurboWhileBottingMenuItem.Text = "Turbo While Botting";
-            // 
-            // SettingsSubMenu
-            // 
-            this.SettingsSubMenu.Text = "Settings";
-            // 
-            // HelpSubMenu
-            // 
-            this.HelpSubMenu.Text = "Help";
             // 
             // groupBox3
             // 
@@ -478,13 +364,44 @@
             this.PauseBtn.UseVisualStyleBackColor = true;
             this.PauseBtn.Click += new System.EventHandler(this.PauseBtn_Click);
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(307, 29);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(77, 13);
+            this.label7.TabIndex = 6;
+            this.label7.Text = "Mutation Rate:";
+            // 
+            // MutationRateInput
+            // 
+            this.MutationRateInput.DecimalPlaces = 1;
+            this.MutationRateInput.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.MutationRateInput.Location = new System.Drawing.Point(388, 26);
+            this.MutationRateInput.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.MutationRateInput.Name = "MutationRateInput";
+            this.MutationRateInput.Size = new System.Drawing.Size(57, 20);
+            this.MutationRateInput.TabIndex = 7;
+            this.MutationRateInput.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            65536});
+            // 
             // GeneticAlgorithmToolForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(492, 493);
+            this.ClientSize = new System.Drawing.Size(487, 490);
             this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.BotMenu);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "GeneticAlgorithmToolForm";
@@ -497,12 +414,10 @@
             this.groupBox2.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.BotMenu.ResumeLayout(false);
-            this.BotMenu.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MutationRateInput)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -520,26 +435,6 @@
         private System.Windows.Forms.Label LevelResult;
         private System.Windows.Forms.Label LevelLabel;
         private System.Windows.Forms.Label GenerationResult;
-        public BizHawk.WinForms.Controls.MenuStripEx BotMenu;
-        public BizHawk.WinForms.Controls.ToolStripMenuItemEx FileSubMenu;
-        public BizHawk.WinForms.Controls.ToolStripMenuItemEx NewMenuItem;
-        public BizHawk.WinForms.Controls.ToolStripMenuItemEx OpenMenuItem;
-        public BizHawk.WinForms.Controls.ToolStripMenuItemEx SaveMenuItem;
-        public BizHawk.WinForms.Controls.ToolStripMenuItemEx SaveAsMenuItem;
-        public BizHawk.WinForms.Controls.ToolStripMenuItemEx RecentSubMenu;
-        public BizHawk.WinForms.Controls.ToolStripSeparatorEx toolStripSeparator2;
-        public BizHawk.WinForms.Controls.ToolStripMenuItemEx OptionsSubMenu;
-        public BizHawk.WinForms.Controls.ToolStripMenuItemEx MemoryDomainsMenuItem;
-        public BizHawk.WinForms.Controls.ToolStripSeparatorEx toolStripSeparator3;
-        public BizHawk.WinForms.Controls.ToolStripMenuItemEx DataSizeMenuItem;
-        public BizHawk.WinForms.Controls.ToolStripMenuItemEx _1ByteMenuItem;
-        public BizHawk.WinForms.Controls.ToolStripMenuItemEx _2ByteMenuItem;
-        public BizHawk.WinForms.Controls.ToolStripMenuItemEx _4ByteMenuItem;
-        public BizHawk.WinForms.Controls.ToolStripMenuItemEx BigEndianMenuItem;
-        public BizHawk.WinForms.Controls.ToolStripSeparatorEx toolStripSeparator4;
-        public BizHawk.WinForms.Controls.ToolStripMenuItemEx TurboWhileBottingMenuItem;
-        public BizHawk.WinForms.Controls.ToolStripMenuItemEx SettingsSubMenu;
-        public BizHawk.WinForms.Controls.ToolStripMenuItemEx HelpSubMenu;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label BestRewardResult;
         private System.Windows.Forms.GroupBox groupBox3;
@@ -554,5 +449,7 @@
         private System.Windows.Forms.Button StopBtn;
         private System.Windows.Forms.Button StartBtn;
         private System.Windows.Forms.Button PauseBtn;
+        private System.Windows.Forms.NumericUpDown MutationRateInput;
+        private System.Windows.Forms.Label label7;
     }
 }

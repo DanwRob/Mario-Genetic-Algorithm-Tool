@@ -11,13 +11,16 @@ namespace GeneticAlgorithmTool
         public int Generation { get; private set; }
         public int TotalGenerations { get; private set; }
         public int PopulationSize { get; private set; }
+        public double MutationRate { get; private set; }
         private int currentSpecies = 0;
         private int prevScore = 0;
-        public GeneticAlgorithm(int totalGenerations, int populationSize, JoypadSpace joypad)
+
+        public GeneticAlgorithm(int totalGenerations, int populationSize, double mutationRate, JoypadSpace joypad)
         {
             Generation = 1;
             PopulationSize = populationSize;
             TotalGenerations = totalGenerations;
+            MutationRate = mutationRate;
             Joypad = joypad;
             Population = new List<Species>(populationSize);
             for (int index = 0; index < populationSize; index++)
@@ -56,7 +59,7 @@ namespace GeneticAlgorithmTool
             {
                 int randomIndex = Utils.RandRange(0, species.Genes.Count);
                 double probablity = Utils.RandRange(1, 100) / 100.0;
-                if (probablity <= 0.3)
+                if (probablity <= MutationRate)
                 {
                     species.Genes[randomIndex] = Joypad.GetFrameActionSample();
                 }
