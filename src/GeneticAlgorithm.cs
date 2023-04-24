@@ -45,7 +45,7 @@ namespace GeneticAlgorithmTool
             foreach (var species in Population)
             {
                 species.Id = resetId++;
-                species.Genes = bestParent.Genes.ConvertAll(gen => gen.Clone()).ToList();
+                species.Genes = bestParent.Genes.Select(gen => gen.Clone()).ToList();
                 species.ResetSpecies();
             }
         }
@@ -55,15 +55,16 @@ namespace GeneticAlgorithmTool
             foreach(var species in Population)
             {
                 int randomIndex = Utils.RandRange(0, species.Genes.Count);
-                float probablity = Utils.RandRange(1, 100) / 100;
+                double probablity = Utils.RandRange(1, 100) / 100.0;
                 if (probablity <= 0.3)
                 {
                     species.Genes[randomIndex] = Joypad.GetFrameActionSample();
                 }
                 //Modify the last 5 frames to prevent local optimum
-                for (int i = 1; i < 5; i++)
+                for (int i = 1; i <= 5; i++)
                 {
-                    species.Genes[species.Genes.Count - i] = Joypad.GetFrameActionSample();
+                    var index = species.Genes.Count - i;
+                    species.Genes[index] = Joypad.GetFrameActionSample(); ;
                 }
             }
         }

@@ -46,14 +46,15 @@ namespace GeneticAlgorithmTool
 
         public override void Restart()
         {
-            if (!running)
-            {
-                MainForm.PauseEmulator();
-                return;
-            }
+            //if (!running)
+            //{
+            //    MainForm.PauseEmulator();
+            //    return;
+            //}
             environment = new GameEnvironment(Emulator, ApiContainer, InputManager.ClickyVirtualPadController);
             environment.SkipStartScreen();
             ApiContainer.SaveState.SaveSlot(slot);
+            MainForm.PauseEmulator();
             GenerationResult.Text = geneticAlgorithm.Generation.ToString();
         }
 
@@ -128,7 +129,6 @@ namespace GeneticAlgorithmTool
             ConsoleLog.Text = "";
             running = true;
             MainForm.UnpauseEmulator();
-            Restart();
         }
         private void StopBtn_Click(object sender, EventArgs e)
         {
