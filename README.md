@@ -34,6 +34,6 @@ Make sure you unzip a copy of BizHawk(full folder) on your current root project 
 
 ## Release Installation
 1. Backup your BizHawk's `config.ini file`.
-2. Download and unzip `GeneticAlgorithmTool.zip` from [release packages](https://github.com/DanwRob/Mario-Genetic-Algorithm-Tool/tags) to `BizHawk/ExternalTools`, if the ExternalTools folder doesn't exist, you should create it.
+2. Download and unzip `GeneticAlgorithmTool.zip` from the latest release in [release packages](https://github.com/DanwRob/Mario-Genetic-Algorithm-Tool/releases) to `BizHawk/ExternalTools`, if the ExternalTools folder doesn't exist, you should create it.
 3. Load Super Mario Bros ROM game (any dump for the Nintendo NES will do) on EmuHawk
 3. Open the tool in the toolbar menu: Tools -> External Tools -> Mario Genetic Algorithm Tool
