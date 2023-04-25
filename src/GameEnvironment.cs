@@ -26,21 +26,22 @@ namespace GeneticAlgorithmTool
 
         public void StartScreen()
         {
-            memoryHandler.SetGameplayMode(GameMemoryHandler.GameplayMode.Demo);
+            memoryHandler.Gameplay = GameMemoryHandler.GameplayMode.Standard;
         }
 
         public void SkipStartScreen()
         {
             //Press and release Start button
             FrameAdvance(Buttons.Start);
-
+            FrameAdvance(Buttons.A);
             //Press Start button until the game starts
-            while (memoryHandler.Time == 401)
+            while (memoryHandler.Gameplay == GameMemoryHandler.GameplayMode.Demo || memoryHandler.Time == 401)
             {
                 //Press and release Start button
                 FrameAdvance(Buttons.Start);
+                memoryHandler.WriteStage();
 
-                //run-out the prelevel timer to skip the animation
+                FrameAdvance(Buttons.A);
                 memoryHandler.PrelevelTimer();
             }
         }

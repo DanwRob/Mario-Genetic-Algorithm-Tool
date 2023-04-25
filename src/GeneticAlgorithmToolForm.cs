@@ -1,6 +1,7 @@
 ﻿using BizHawk.Client.Common;
 using BizHawk.Client.EmuHawk;
 using BizHawk.Emulation.Common;
+using BizHawk.Emulation.Cores.Sega.MasterSystem;
 using GeneticAlgorithmTool.Models;
 using System;
 
@@ -48,7 +49,7 @@ namespace GeneticAlgorithmTool
         {
             environment = new GameEnvironment(Emulator, ApiContainer, InputManager.ClickyVirtualPadController);
             environment.SkipStartScreen();
-            ApiContainer.SaveState.SaveSlot(slot);
+            
             MainForm.PauseEmulator();
             GenerationResult.Text = geneticAlgorithm.Generation.ToString();
         }
@@ -125,6 +126,7 @@ namespace GeneticAlgorithmTool
             ConsoleLog.Text = "";
             running = true;
             MainForm.UnpauseEmulator();
+            ApiContainer.SaveState.SaveSlot(slot);
         }
         private void StopBtn_Click(object sender, EventArgs e)
         {

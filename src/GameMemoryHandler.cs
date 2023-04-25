@@ -58,6 +58,13 @@ namespace GeneticAlgorithmTool
             }
         }
 
+        public void WriteStage()
+        {
+            memory.WriteByte(0x075f, 0);
+            memory.WriteByte(0x075c, 0);
+            memory.WriteByte(0x0760, 0);
+        }
+
         private uint ReadMemRange(long addr, int length)
         {
             var bytes = memory.ReadByteRange(addr, length);
@@ -65,7 +72,10 @@ namespace GeneticAlgorithmTool
             return UInt32.Parse(strValue);
         }
 
-        public void SetGameplayMode(GameplayMode mode) => memory.WriteU8(0x0770, (uint)mode);
+        public GameplayMode Gameplay {
+            set{ memory.WriteU8(0x0770, (uint)value); }
+            get{ return (GameplayMode)memory.ReadByte(0x0770); }
+        }
 
         public void PlayerDies()=> memory.WriteByte(0x000E, 0x06);
         public void PrelevelTimer() => memory.WriteByte(0x07A0, 0x00);
