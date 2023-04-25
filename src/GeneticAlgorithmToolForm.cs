@@ -1,7 +1,6 @@
 ﻿using BizHawk.Client.Common;
 using BizHawk.Client.EmuHawk;
 using BizHawk.Emulation.Common;
-using BizHawk.Emulation.Cores.Sega.MasterSystem;
 using GeneticAlgorithmTool.Models;
 using System;
 
@@ -19,7 +18,7 @@ namespace GeneticAlgorithmTool
         private string windowTitle = "Genetic Algorithm Tool";
         private JoypadSpace joypad;
         private GeneticAlgorithm geneticAlgorithm;
-        private Species currerntSpecie;
+        private Species currentSpecie;
         private readonly int slot = 8;
         private bool running = false;
         #region Properties
@@ -42,7 +41,7 @@ namespace GeneticAlgorithmTool
             GameActionInput.SelectedIndex = 0;
             joypad = new JoypadSpace(GameActions.RightOnly);
             geneticAlgorithm = new GeneticAlgorithm(100, 6, 0.3,joypad);
-            currerntSpecie = geneticAlgorithm.NextSpecie();
+            currentSpecie = geneticAlgorithm.NextSpecie();
         }
 
         public override void Restart()
@@ -54,7 +53,11 @@ namespace GeneticAlgorithmTool
             GenerationResult.Text = geneticAlgorithm.Generation.ToString();
         }
 
-        protected override void UpdateBefore()
+        protected override void UpdateBefore() => UpdateBeforeFrame();
+
+        protected override void FastUpdateBefore() => UpdateBeforeFrame();
+        
+        private void UpdateBeforeFrame()
         {
             if (!running)
             {
@@ -66,32 +69,35 @@ namespace GeneticAlgorithmTool
                 StopBtn.PerformClick();
             }
 
-            if (currerntSpecie.IsGenDone())
+            if (currentSpecie.IsGenDone())
             {
                 var frameAction = joypad.GetFrameActionSample();
-                currerntSpecie.Genes.Add(frameAction);
+                currentSpecie.Genes.Add(frameAction);
             }
         }
 
-        protected override void UpdateAfter()
+        protected override void UpdateAfter() => UpdateFrame();
+        protected override void FastUpdateAfter() => UpdateFrame();
+
+        private void UpdateFrame()
         {
             if (!running)
             {
                 return;
             }
 
-            var currentFrameAction = currerntSpecie.GetCurrentGen();
+            var currentFrameAction = currentSpecie.GetCurrentGen();
 
             var step = environment.Step(currentFrameAction.Actions);
-            geneticAlgorithm.FitnessFunction(currerntSpecie, step);
+            geneticAlgorithm.FitnessFunction(currentSpecie, step);
 
             currentFrameAction.AdvanceFrame();
             UpdateUI(step,currentFrameAction);
 
             if (step != null && step.Done)
             {
-                currerntSpecie.RemoveLastCorruptGenes();
-                currerntSpecie = geneticAlgorithm.NextSpecie();
+                currentSpecie.RemoveLastCorruptGenes();
+                currentSpecie = geneticAlgorithm.NextSpecie();
                 GenerationResult.Text = geneticAlgorithm.Generation.ToString();
                 ApiContainer.SaveState.LoadSlot(slot);
             }
@@ -103,8 +109,9 @@ namespace GeneticAlgorithmTool
             WorldResult.Text = $"{step.Info.World}";
             PositionXResult.Text = $"{step.Info.XPosition}";
             PositionYResult.Text = $"{step.Info.YPosition}";
+            BestRewardResult.Text = $"{geneticAlgorithm.BestReward}";
 
-            ConsoleLog.AppendText($"{currerntSpecie} Action:{string.Join("", action.Actions)}\r\n");
+            ConsoleLog.AppendText($"{currentSpecie} Action:{string.Join("", action.Actions)}\r\n");
         }
 
         #region Events
@@ -121,11 +128,13 @@ namespace GeneticAlgorithmTool
             EnableConfigurationControls(false);
             joypad = new JoypadSpace(GameActions.SelectActions(gameActions));
             geneticAlgorithm = new GeneticAlgorithm(generations, population, mutationRate, joypad);
-            currerntSpecie = geneticAlgorithm.NextSpecie();
+            currentSpecie = geneticAlgorithm.NextSpecie();
             ToggleInitButton(true);
             ConsoleLog.Text = "";
             running = true;
+            SetSpeed();
             MainForm.UnpauseEmulator();
+            
             ApiContainer.SaveState.SaveSlot(slot);
         }
         private void StopBtn_Click(object sender, EventArgs e)
@@ -158,6 +167,7 @@ namespace GeneticAlgorithmTool
             GenerationInput.Enabled = enable;
             GameActionInput.Enabled = enable;
             MutationRateInput.Enabled = enable;
+            SpeedToggle.Enabled = enable;
         }
 
         private void ToggleInitButton(bool click)
@@ -166,5 +176,17 @@ namespace GeneticAlgorithmTool
             StopBtn.Enabled = click;
             PauseBtn.Enabled = click;
         }
+
+        private void SetSpeed()
+        {
+            if (SpeedToggle.Checked)
+            {
+                MainForm.Unthrottle();
+            }
+            else
+            {
+                MainForm.Throttle();
+            }
+        }       
     }
 }

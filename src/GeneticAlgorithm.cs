@@ -11,6 +11,7 @@ namespace GeneticAlgorithmTool
         public int Generation { get; private set; }
         public int TotalGenerations { get; private set; }
         public int PopulationSize { get; private set; }
+        public double BestReward { get; private set; }
         public double MutationRate { get; private set; }
         private int currentSpecies = 0;
         private int prevScore = 0;
@@ -72,8 +73,6 @@ namespace GeneticAlgorithmTool
             }
         }
 
-        public Species BestScore() => Population.Last();
-
         public Species NextSpecie()
         {
             
@@ -91,7 +90,9 @@ namespace GeneticAlgorithmTool
         private void NextGeneration()
         {
             RankingSelection();
-            Crossover(Population.Last());
+            var bestSpecies = Population.Last();
+            BestReward = bestSpecies.Reward;
+            Crossover(bestSpecies);
             Mutation();
             Generation++;
         }

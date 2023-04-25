@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.MutationRateInput = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
             this.GameActionInput = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
             this.GenerationInput = new System.Windows.Forms.NumericUpDown();
@@ -36,6 +39,7 @@
             this.PopulationInput = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.PauseBtn = new System.Windows.Forms.Button();
             this.StopBtn = new System.Windows.Forms.Button();
             this.StartBtn = new System.Windows.Forms.Button();
             this.BestRewardResult = new System.Windows.Forms.Label();
@@ -53,20 +57,20 @@
             this.WorldResult = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.PauseBtn = new System.Windows.Forms.Button();
-            this.label7 = new System.Windows.Forms.Label();
-            this.MutationRateInput = new System.Windows.Forms.NumericUpDown();
+            this.SpeedToggle = new GeneticAlgorithmTool.Controls.ToggleButton();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MutationRateInput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.GenerationInput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PopulationInput)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.MutationRateInput)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label8);
+            this.groupBox1.Controls.Add(this.SpeedToggle);
             this.groupBox1.Controls.Add(this.MutationRateInput);
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.GameActionInput);
@@ -81,6 +85,47 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Configuration";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(333, 78);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(61, 13);
+            this.label8.TabIndex = 9;
+            this.label8.Text = "Max Speed";
+            // 
+            // MutationRateInput
+            // 
+            this.MutationRateInput.DecimalPlaces = 1;
+            this.MutationRateInput.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.MutationRateInput.Location = new System.Drawing.Point(388, 26);
+            this.MutationRateInput.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.MutationRateInput.Name = "MutationRateInput";
+            this.MutationRateInput.Size = new System.Drawing.Size(57, 20);
+            this.MutationRateInput.TabIndex = 7;
+            this.MutationRateInput.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            65536});
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(307, 29);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(77, 13);
+            this.label7.TabIndex = 6;
+            this.label7.Text = "Mutation Rate:";
             // 
             // GameActionInput
             // 
@@ -188,6 +233,17 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Results:";
             // 
+            // PauseBtn
+            // 
+            this.PauseBtn.Enabled = false;
+            this.PauseBtn.Location = new System.Drawing.Point(301, 19);
+            this.PauseBtn.Name = "PauseBtn";
+            this.PauseBtn.Size = new System.Drawing.Size(75, 23);
+            this.PauseBtn.TabIndex = 9;
+            this.PauseBtn.Text = "Pause";
+            this.PauseBtn.UseVisualStyleBackColor = true;
+            this.PauseBtn.Click += new System.EventHandler(this.PauseBtn_Click);
+            // 
             // StopBtn
             // 
             this.StopBtn.Enabled = false;
@@ -212,7 +268,7 @@
             // BestRewardResult
             // 
             this.BestRewardResult.AutoSize = true;
-            this.BestRewardResult.Location = new System.Drawing.Point(184, 23);
+            this.BestRewardResult.Location = new System.Drawing.Point(155, 23);
             this.BestRewardResult.Name = "BestRewardResult";
             this.BestRewardResult.Size = new System.Drawing.Size(13, 13);
             this.BestRewardResult.TabIndex = 6;
@@ -221,7 +277,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(106, 23);
+            this.label2.Location = new System.Drawing.Point(87, 23);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(71, 13);
             this.label2.TabIndex = 5;
@@ -230,7 +286,7 @@
             // GenerationResult
             // 
             this.GenerationResult.AutoSize = true;
-            this.GenerationResult.Location = new System.Drawing.Point(75, 23);
+            this.GenerationResult.Location = new System.Drawing.Point(68, 24);
             this.GenerationResult.Name = "GenerationResult";
             this.GenerationResult.Size = new System.Drawing.Size(13, 13);
             this.GenerationResult.TabIndex = 2;
@@ -353,48 +409,19 @@
             this.label3.TabIndex = 5;
             this.label3.Text = "World:";
             // 
-            // PauseBtn
+            // SpeedToggle
             // 
-            this.PauseBtn.Enabled = false;
-            this.PauseBtn.Location = new System.Drawing.Point(301, 19);
-            this.PauseBtn.Name = "PauseBtn";
-            this.PauseBtn.Size = new System.Drawing.Size(75, 23);
-            this.PauseBtn.TabIndex = 9;
-            this.PauseBtn.Text = "Pause";
-            this.PauseBtn.UseVisualStyleBackColor = true;
-            this.PauseBtn.Click += new System.EventHandler(this.PauseBtn_Click);
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(307, 29);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(77, 13);
-            this.label7.TabIndex = 6;
-            this.label7.Text = "Mutation Rate:";
-            // 
-            // MutationRateInput
-            // 
-            this.MutationRateInput.DecimalPlaces = 1;
-            this.MutationRateInput.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.MutationRateInput.Location = new System.Drawing.Point(388, 26);
-            this.MutationRateInput.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.MutationRateInput.Name = "MutationRateInput";
-            this.MutationRateInput.Size = new System.Drawing.Size(57, 20);
-            this.MutationRateInput.TabIndex = 7;
-            this.MutationRateInput.Value = new decimal(new int[] {
-            3,
-            0,
-            0,
-            65536});
+            this.SpeedToggle.AutoSize = true;
+            this.SpeedToggle.Location = new System.Drawing.Point(400, 74);
+            this.SpeedToggle.MinimumSize = new System.Drawing.Size(45, 22);
+            this.SpeedToggle.Name = "SpeedToggle";
+            this.SpeedToggle.OffBackColor = System.Drawing.Color.Gray;
+            this.SpeedToggle.OffToggleColor = System.Drawing.Color.Gainsboro;
+            this.SpeedToggle.OnBackColor = System.Drawing.Color.MediumSlateBlue;
+            this.SpeedToggle.OnToggleColor = System.Drawing.Color.WhiteSmoke;
+            this.SpeedToggle.Size = new System.Drawing.Size(45, 22);
+            this.SpeedToggle.TabIndex = 8;
+            this.SpeedToggle.UseVisualStyleBackColor = true;
             // 
             // GeneticAlgorithmToolForm
             // 
@@ -408,6 +435,7 @@
             this.Load += new System.EventHandler(this.OnBotLoad);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MutationRateInput)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.GenerationInput)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PopulationInput)).EndInit();
             this.groupBox2.ResumeLayout(false);
@@ -416,7 +444,6 @@
             this.panel1.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.MutationRateInput)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -451,5 +478,7 @@
         private System.Windows.Forms.Button PauseBtn;
         private System.Windows.Forms.NumericUpDown MutationRateInput;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private Controls.ToggleButton SpeedToggle;
     }
 }
