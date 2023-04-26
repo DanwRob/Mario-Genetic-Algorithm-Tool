@@ -30,7 +30,6 @@
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.SpeedToggle = new GeneticAlgorithmTool.Controls.ToggleButton();
             this.MutationRateInput = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
             this.GameActionInput = new System.Windows.Forms.ComboBox();
@@ -58,6 +57,7 @@
             this.WorldResult = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.SpeedToggle = new GeneticAlgorithmTool.Controls.ToggleButton();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MutationRateInput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.GenerationInput)).BeginInit();
@@ -94,20 +94,6 @@
             this.label8.Size = new System.Drawing.Size(61, 13);
             this.label8.TabIndex = 9;
             this.label8.Text = "Max Speed";
-            // 
-            // SpeedToggle
-            // 
-            this.SpeedToggle.AutoSize = true;
-            this.SpeedToggle.Location = new System.Drawing.Point(400, 74);
-            this.SpeedToggle.MinimumSize = new System.Drawing.Size(45, 22);
-            this.SpeedToggle.Name = "SpeedToggle";
-            this.SpeedToggle.OffBackColor = System.Drawing.Color.Gray;
-            this.SpeedToggle.OffToggleColor = System.Drawing.Color.Gainsboro;
-            this.SpeedToggle.OnBackColor = System.Drawing.Color.MediumSlateBlue;
-            this.SpeedToggle.OnToggleColor = System.Drawing.Color.WhiteSmoke;
-            this.SpeedToggle.Size = new System.Drawing.Size(45, 22);
-            this.SpeedToggle.TabIndex = 8;
-            this.SpeedToggle.UseVisualStyleBackColor = true;
             // 
             // MutationRateInput
             // 
@@ -423,6 +409,20 @@
             this.label3.TabIndex = 5;
             this.label3.Text = "World:";
             // 
+            // SpeedToggle
+            // 
+            this.SpeedToggle.AutoSize = true;
+            this.SpeedToggle.Location = new System.Drawing.Point(400, 74);
+            this.SpeedToggle.MinimumSize = new System.Drawing.Size(45, 22);
+            this.SpeedToggle.Name = "SpeedToggle";
+            this.SpeedToggle.OffBackColor = System.Drawing.Color.Gray;
+            this.SpeedToggle.OffToggleColor = System.Drawing.Color.Gainsboro;
+            this.SpeedToggle.OnBackColor = System.Drawing.Color.MediumSlateBlue;
+            this.SpeedToggle.OnToggleColor = System.Drawing.Color.WhiteSmoke;
+            this.SpeedToggle.Size = new System.Drawing.Size(45, 22);
+            this.SpeedToggle.TabIndex = 8;
+            this.SpeedToggle.UseVisualStyleBackColor = true;
+            // 
             // GeneticAlgorithmToolForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -432,6 +432,7 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "GeneticAlgorithmToolForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GeneticAlgorithmToolForm_FormClosing);
             this.Load += new System.EventHandler(this.OnBotLoad);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

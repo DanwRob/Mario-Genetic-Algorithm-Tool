@@ -14,7 +14,7 @@ namespace GeneticAlgorithmTool.Controls
         private bool solidStyle = true;
 
         //Properties
-        [Category("RJ Code Advance")]
+        [Category("Button Code Advance")]
         public Color OnBackColor
         {
             get { return onBackColor; }
@@ -24,7 +24,7 @@ namespace GeneticAlgorithmTool.Controls
                 this.Invalidate();
             }
         }
-        [Category("RJ Code Advance")]
+        [Category("Button Code Advance")]
         public Color OnToggleColor
         {
             get { return onToggleColor; }
@@ -34,7 +34,7 @@ namespace GeneticAlgorithmTool.Controls
                 this.Invalidate();
             }
         }
-        [Category("RJ Code Advance")]
+        [Category("Button Code Advance")]
         public Color OffBackColor
         {
             get { return offBackColor; }
@@ -44,7 +44,7 @@ namespace GeneticAlgorithmTool.Controls
                 this.Invalidate();
             }
         }
-        [Category("RJ Code Advance")]
+        [Category("Button Code Advance")]
         public Color OffToggleColor
         {
             get { return offToggleColor; }
@@ -60,7 +60,7 @@ namespace GeneticAlgorithmTool.Controls
             get { return base.Text; }
             set { }
         }
-        [Category("RJ Code Advance")]
+        [Category("Button Code Advance")]
         [DefaultValue(true)]
         public bool SolidStyle
         {

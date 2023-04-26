@@ -6,6 +6,7 @@ namespace GeneticAlgorithmTool
 {
     public class Species
     {
+        private readonly int lastNFrames = 25;
         public int Id { get; set; }
         public List<FrameAction> Genes { get; set; }
         public int Reward { get; set; }
@@ -25,13 +26,15 @@ namespace GeneticAlgorithmTool
 
         public void UpdateInformation(StepResponse stepResponse)
         {
-            Done = stepResponse.Done;
             var currentFrame = GetCurrentGen();
+           
             currentFrame.Coins = (int)stepResponse.Info.Coins;
             currentFrame.Time = (int)stepResponse.Info.Time;
             currentFrame.Score = (int)stepResponse.Info.Score;
             currentFrame.XPosition = (int)stepResponse.Info.XPosition;
             currentFrame.YPosition = (int)stepResponse.Info.YPosition;
+
+            Done = stepResponse.Done;
         }
 
         public FrameAction GetCurrentGen()
@@ -73,7 +76,6 @@ namespace GeneticAlgorithmTool
                 }
                 return;
             }
-
             Genes.RemoveAt(lastIndex);
         }
 
@@ -82,6 +84,33 @@ namespace GeneticAlgorithmTool
             currentGen = 0;
             Reward = 0;
             Done = false;
+        }
+
+        public void IsSpecieStuck()
+        {
+            bool isStuck = true;
+            if (currentGen < lastNFrames)
+            {
+                return;
+            }
+
+            var lastGen = Genes[currentGen];
+            if (!lastGen.Actions.Contains(Buttons.A))
+            {
+                return;
+            }
+
+            for (int reverseIndex = currentGen - 1; reverseIndex > currentGen - lastNFrames; reverseIndex--)
+            {
+                var gen = Genes[reverseIndex];
+                if (lastGen.XPosition != gen.XPosition)
+                {
+                    isStuck = false;
+                }
+                lastGen = gen;
+            }
+
+            Done =  isStuck? isStuck : Done;
         }
     }
 }

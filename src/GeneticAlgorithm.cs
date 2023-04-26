@@ -95,6 +95,6 @@ namespace GeneticAlgorithmTool
             Crossover(bestSpecies);
             Mutation();
             Generation++;
-        }
+        }        
     }
 }

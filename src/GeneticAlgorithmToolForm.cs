@@ -13,7 +13,6 @@ namespace GeneticAlgorithmTool
         "AB30029EFEC6CCFC5D65DFDA7FBC6E6489A80805")] // E
     public partial class GeneticAlgorithmToolForm : ToolFormBase, IExternalToolForm
     {
-        //public static Type Resources => typeof(ToolFormBase).Assembly.GetType("BizHawk.Client.EmuHawk.Properties.Resources");
         private GameEnvironment environment;
         private string windowTitle = "Genetic Algorithm Tool";
         private JoypadSpace joypad;
@@ -93,8 +92,9 @@ namespace GeneticAlgorithmTool
 
             currentFrameAction.AdvanceFrame();
             UpdateUI(step,currentFrameAction);
+            currentSpecie.IsSpecieStuck();
 
-            if (step != null && step.Done)
+            if (currentSpecie.Done)
             {
                 currentSpecie.RemoveLastCorruptGenes();
                 currentSpecie = geneticAlgorithm.NextSpecie();
@@ -105,13 +105,16 @@ namespace GeneticAlgorithmTool
 
         private void UpdateUI(StepResponse step, FrameAction action)
         {
+            if (!action.IsFinishAction()) {
+                return;
+            }
             LevelResult.Text = $"{step.Info.Level}";
             WorldResult.Text = $"{step.Info.World}";
-            PositionXResult.Text = $"{step.Info.XPosition}";
-            PositionYResult.Text = $"{step.Info.YPosition}";
+            PositionXResult.Text = $"{action.XPosition}";
+            PositionYResult.Text = $"{action.YPosition}";
             BestRewardResult.Text = $"{geneticAlgorithm.BestReward}";
 
-            ConsoleLog.AppendText($"{currentSpecie} Action:{string.Join("", action.Actions)}\r\n");
+            ConsoleLog.AppendText($"{currentSpecie}  Action: [{string.Join("", action.Actions)}]  Pressed: {action.TotalFrames} frames\r\n");
         }
 
         #region Events
@@ -175,6 +178,7 @@ namespace GeneticAlgorithmTool
             StartBtn.Enabled = !click;
             StopBtn.Enabled = click;
             PauseBtn.Enabled = click;
+            PauseBtn.Text = "Pause";
         }
 
         private void SetSpeed()
@@ -187,6 +191,11 @@ namespace GeneticAlgorithmTool
             {
                 MainForm.Throttle();
             }
-        }       
+        }
+
+        private void GeneticAlgorithmToolForm_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
+        {
+            MainForm.Throttle();
+        }
     }
 }
