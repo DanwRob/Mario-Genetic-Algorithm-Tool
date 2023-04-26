@@ -41,4 +41,4 @@ Make sure you unzip a copy of BizHawk(full folder) on your current root project 
 Provide three movement actions list `Right only`, `Simple Movement`, and `Complex Movement`.
 1. Right only: `[{None}, {Right}, {Right, A}, {Right, B}, {Right, A, B}]`
 2. Simple Movement: `[{None}, {Right}, {Right, A}, {Right, B}, {Right, A, B}, {Left}]`
-2. Complex Movement: `[{None}, {Right}, {Right, A}, {Right, B}, {Right, A, B}, {Left}, {Left}, {Left, A}, {Left, B}, {Left, A, B}, {Up}, {Down}]`
+2. Complex Movement: `[{None}, {Right}, {Right, A}, {Right, B}, {Right, A, B}, {Left}, {Left, A}, {Left, B}, {Left, A, B}, {Up}, {Down}]`
